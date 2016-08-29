@@ -121,7 +121,7 @@ namespace problem_solving_followup
                                 string json2 = JsonConvert.SerializeObject(products, Formatting.Indented);
                                 File.WriteAllText(@"Data/Products.json", json2);
 
-                                transactions = GenerateRandomTransactions(users, products);
+                                //transactions = GenerateRandomTransactions(users, products);
 
                                 string json3 = JsonConvert.SerializeObject(transactions, Formatting.Indented);
                                 File.WriteAllText(@"Data/Transactions.json", json3);
