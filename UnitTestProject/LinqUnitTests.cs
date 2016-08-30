@@ -66,7 +66,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchased()
         {
-            var result = transactions.Sum(q => q.Quantity); // TODO
+            var result = transactions.Sum(q => q.Quantity); 
 
             Assert.AreEqual(3001, result);
         }
@@ -74,7 +74,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedIn2016()
         {
-            var result = transactions.Where(t => t.Date.Year == 2016).Sum(q => q.Quantity); // TODO
+            var result = transactions.Where(t => t.Date.Year == 2016).Sum(q => q.Quantity); 
 
             Assert.AreEqual(1160, result);
         }
@@ -82,7 +82,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedInThePast7Days()
         {
-            var result = transactions.Where(t => t.Date >= DateTime.Today.AddDays(-7)).Sum(t => t.Quantity); // TODO
+            var result = transactions.Where(t => t.Date >= DateTime.Today.AddDays(-7)).Sum(t => t.Quantity); 
 
             Assert.AreEqual(32, result);
         }
@@ -90,7 +90,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyTransactionsBoughtMoreThan1Quantity()
         {
-            var result = transactions.Where(t => t.Quantity > 1).Count();// TODO
+            var result = transactions.Where(t => t.Quantity > 1).Count();
 
             Assert.AreEqual(1001, result);
         }
@@ -98,7 +98,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyTransactionsOccuredOnSundays()
         {
-            var result = transactions.Where(t => t.Date.DayOfWeek == DayOfWeek.Sunday).Count(); // TODO
+            var result = transactions.Where(t => t.Date.DayOfWeek == DayOfWeek.Sunday).Count(); 
 
             Assert.AreEqual(267, result);
         }
@@ -106,7 +106,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheAverageQuantityPurchased()
         {
-            var result = (double)transactions.Sum(q => q.Quantity) / (double)transactions.Count; // TODO
+            var result = (double)transactions.Sum(q => q.Quantity) / (double)transactions.Count; 
 
             Assert.AreEqual(1.5005, result, 0.0001);
         }
@@ -114,7 +114,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsHaveBeenBought()
         {
-            var result = transactions.Where(t => t.ProductName.ToUpper() == "CHIPS").Count(); // TODO
+            var result = transactions.Where(t => t.ProductName.ToUpper() == "CHIPS").Sum(t => t.Quantity); 
 
             Assert.AreEqual(390, result);
         }
@@ -125,7 +125,7 @@ namespace UnitTestProject
             var result = transactions
                 .Where(t => t.UserName == "Jason")
                 .Where (t => t.ProductName == "Chips")
-                .Count();
+                .Sum(t => t.Quantity);
 
             Assert.AreEqual(44, result);
         }
@@ -137,7 +137,7 @@ namespace UnitTestProject
                 .Where(t => t.UserName == "Jason")
                 .Where (t => t.ProductName == "Chips")
                 .Where (t => t.Date.Year == 2015)
-                .Count(); // TODO
+                .Sum(t => t.Quantity);
 
             Assert.AreEqual(33, result);
         }
@@ -150,7 +150,7 @@ namespace UnitTestProject
                 .Where(t => t.ProductName == "Chips")
                 .Where(t => t.Date.Year == 2016)
                 .Where(t => t.Date.Month == 5)
-                .Count(); // TODO
+                .Sum(t => t.Quantity);
 
             Assert.AreEqual(2, result);
         }
@@ -160,11 +160,7 @@ namespace UnitTestProject
         {
             var result = transactions
                 .Where(t => t.Date.TimeOfDay > TimeSpan.FromHours(12))
-                .Where(t => t.Date.TimeOfDay < TimeSpan.FromHours(13))
-                .Select(t => t.ProductName)
-                .GroupBy(t => t)
-                .OrderByDescending(t => t.Count())
-                .Select(t => t.ElementAt(0)).ElementAt(0); // TODO
+                .Where(t => t.Date.TimeOfDay < TimeSpan.FromHours(13)); // TODO
 
             Assert.AreEqual("Candy", result);
         }
