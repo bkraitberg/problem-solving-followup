@@ -66,7 +66,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchased()
         {
-            var result = ""; // TODO
+            var result = transactions.Sum(q => q.Quantity); // TODO
 
             Assert.AreEqual(3001, result);
         }
@@ -74,7 +74,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedIn2016()
         {
-            var result = ""; // TODO
+            var result = "" // TODO
 
             Assert.AreEqual(1160, result);
         }
