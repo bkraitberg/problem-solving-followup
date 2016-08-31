@@ -66,7 +66,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchased()
         {
-            var result = ""; // TODO
+            var result = transactions.Sum(t => t.Quantity); // TODO
 
             Assert.AreEqual(3001, result);
         }
@@ -74,7 +74,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedIn2016()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(t => t.Date.Year == 2016).Sum(t => t.Quantity); // TODO
 
             Assert.AreEqual(1160, result);
         }
@@ -82,7 +82,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedInThePast7Days()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(t => t.Date.CompareTo(new DateTime(2016, 8, 22, 16, 0, 0)) > 0).Sum(t => t.Quantity); // TODO
 
             Assert.AreEqual(32, result);
         }
@@ -90,7 +90,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyTransactionsBoughtMoreThan1Quantity()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(t => t.Quantity > 1).Count(); // TODO
 
             Assert.AreEqual(1001, result);
         }
@@ -98,7 +98,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyTransactionsOccuredOnSundays()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(t => t.Date.DayOfWeek == DayOfWeek.Sunday).Count(); // TODO
 
             Assert.AreEqual(267, result);
         }
@@ -106,7 +106,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheAverageQuantityPurchased()
         {
-            var result = 0; // TODO
+            var result = transactions.Average(t => t.Quantity); // TODO
 
             Assert.AreEqual(1.5005, result, 0.0001);
         }
@@ -114,7 +114,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsHaveBeenBought()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(t => t.ProductName == "Chips").Sum(t => t.Quantity); // TODO
 
             Assert.AreEqual(390, result);
         }
@@ -122,7 +122,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsHasJasonBought()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(t => t.ProductName == "Chips").Where(t => t.UserName == "Jason").Sum(t => t.Quantity); // TODO
 
             Assert.AreEqual(44, result);
         }
@@ -130,7 +130,8 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsDidJasonBuyIn2015()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(t => t.ProductName == "Chips").Where(t => t.UserName == "Jason")
+                .Where(t => t.Date.Year == 2015).Sum(t => t.Quantity); // TODO
 
             Assert.AreEqual(33, result);
         }
@@ -138,7 +139,8 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsDidJasonBuyInMay2016()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(t => t.ProductName == "Chips").Where(t => t.UserName == "Jason")
+                .Where(t => t.Date.Year == 2016).Where(t => t.Date.Month == 5).Sum(t => t.Quantity); ; // TODO
 
             Assert.AreEqual(2, result);
         }
@@ -146,7 +148,12 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatProductSellsTheMostBetween12And1PM()
         {
-            var result = ""; // TODO
+            // grab transactions between 12 and 1
+            // get quantity of each product sold in transactions
+            // get name of max quantity
+            var result = transactions.Where(t => t.Date.Hour >= 12).Where(t => t.Date.Hour < 13)
+                .Select(t => new { name = t.ProductName, quantity = transactions.Where(i => i.ProductName == t.ProductName).Sum(i => i.Quantity) })
+                .Max(k => k.quantity) ; // TODO
 
             Assert.AreEqual("Candy", result);
         }
@@ -154,7 +161,10 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatProductSellsTheLeast()
         {
-            var result = ""; // TODO
+            // get quantity of each product sold in all transactions
+            // get the min of each
+            var result = transactions.Select(t => new { name = t.ProductName, quantity = transactions.Where(i => i.ProductName == t.ProductName).Sum(i => i.Quantity) })
+                ; // TODO
 
             Assert.AreEqual("Cookies", result);
         }
@@ -162,6 +172,8 @@ namespace UnitTestProject
         [Test]
         public void Test_WhoBoughtTheMostCandy()
         {
+            // get transactions for candy
+            // get the username with most transactions
             var result = ""; // TODO
 
             Assert.AreEqual("David", result);
@@ -170,6 +182,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalDollarValueOfAllTransactions()
         {
+            // union transaction and product table
             var result = 0; // TODO
 
             Assert.AreEqual(3168.45, result, 0.001);
@@ -178,6 +191,8 @@ namespace UnitTestProject
         [Test]
         public void Test_WhoSpentTheMostMoney()
         {
+            // union transaction and product table
+            // group transactions by users and find user total
             var result = ""; // TODO
 
             Assert.AreEqual("Rod", result);
@@ -186,6 +201,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsThePasswordOfThePersonWhoSpentTheMostMoney()
         {
+            // same as above but union the max username to the user table and grab the password
             var result = ""; // TODO
 
             Assert.AreEqual("optx", result);
