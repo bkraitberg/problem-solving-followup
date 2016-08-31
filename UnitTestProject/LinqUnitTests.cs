@@ -155,7 +155,7 @@ namespace UnitTestProject
                     TotalSold = g.Sum(t => t.Quantity)
                 })
                 .OrderByDescending(t => t.TotalSold)
-                .Last().Product;
+                .First().Product;
 
             Assert.AreEqual("Candy", result);
         }
