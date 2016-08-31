@@ -229,7 +229,22 @@ namespace UnitTestProject
         [Test]
         public void Test_WhoSpentTheMostMoney()
         {
-            var result = ""; // TODO
+            var result = transactions
+                .GroupJoin(products,
+                        t => t.ProductName,
+                        p => p.Name,
+                        (t, p) => new
+                        {
+                            key = t.UserName,
+                            purchaseAmt = p.Sum(x => x.Price * t.Quantity)
+                        })
+                        .GroupBy(gj => gj.key)
+                        .Select(
+                        grp => new
+                        {
+                            name = grp.Key,
+                            total = grp.Sum(x => x.purchaseAmt)
+                        }).OrderByDescending(x => x.total).Select(x => x.name).First();
 
             Assert.AreEqual("Rod", result);
         }
@@ -237,7 +252,31 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsThePasswordOfThePersonWhoSpentTheMostMoney()
         {
-            var result = ""; // TODO
+            var result = transactions
+                .GroupJoin(products,
+                        t => t.ProductName,
+                        p => p.Name,
+                        (t, p) => new
+                        {
+                            key = t.UserName,
+                            purchaseAmt = p.Sum(x => x.Price * t.Quantity)
+                        })
+                        .GroupBy(gj => gj.key)
+                        .Select(
+                        grp => new
+                        {
+                            name = grp.Key,
+                            total = grp.Sum(x => x.purchaseAmt)
+                        }).OrderByDescending(x => x.total)
+                        .Join(users,
+                        x => x.name,
+                        u => u.Name,
+                        (x, u) => new
+                        {
+                            name = x.name,
+                            pass = u.Password
+                        }).Select(x => x.pass).First();
+                        
 
             Assert.AreEqual("optx", result);
         }
