@@ -149,13 +149,13 @@ namespace UnitTestProject
             var result = transactions
                 .Where(t => t.Date.Hour == 12)
                 .GroupBy(t => t.ProductName)
-                .Select(g => g.ToList())
-                .Max(t =>)
-                .Max(g => g.Sum(t => t.Quantity));
-                //.Max(g => g.ke)
-                /*.Select(g => new { ProductName = g g.Key, Quantity = g.Key .Max(t => )
-                .Max(t => )
-                .Max(g => g.Key.Quantity);*/
+                .Select(g => new
+                {
+                    Product = g.Key,
+                    TotalSold = g.Sum(t => t.Quantity)
+                })
+                .OrderByDescending(t => t.TotalSold)
+                .Last().Product;
 
             Assert.AreEqual("Candy", result);
         }
