@@ -82,9 +82,12 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedInThePast7Days()
         {
+            /*
+             * ToDo: ask about the issue regarding referenceing last 7 days
+             */
             var result = transactions
-                .Where(a => a.Date >= DateTime.Today.AddDays(-7) )
-                .Select(a=>a.Quantity)
+                .Where(a => a.Date >= DateTime.Today.AddDays(-7))
+                .Select(a => a.Quantity)
                 .Sum(); // TODO
             
 
@@ -158,8 +161,11 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatProductSellsTheMostBetween12And1PM()
         {
-            // working on it looking for methods that returns 12 and 1 PM
-            var result = ""; // TODO
+            var result = transactions.Where(x => x.Date.Hour >= 12)
+                .Where(x => x.Date.Hour < 13)
+                .OrderByDescending(x => x.Quantity)
+                .GroupBy(g => g.ProductName)
+                .First().Key;
 
             Assert.AreEqual("Candy", result);
         }
