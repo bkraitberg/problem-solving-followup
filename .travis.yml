@@ -4,5 +4,5 @@ install:
   - nuget restore problem-solving-followup.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
-  - xbuild /p:Configuration=Release problem-solving.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./UnitTestProject1/bin/Release/UnitTestProject1.dll
+  - xbuild /p:Configuration=Release problem-solving-followup.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./UnitTestProject/bin/Release/UnitTestProject.dll
