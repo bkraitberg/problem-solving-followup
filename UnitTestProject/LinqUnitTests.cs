@@ -66,7 +66,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchased()
         {
-            var result = ""; // TODO
+            var result = transactions.Sum(s => s.Quantity);
 
             Assert.AreEqual(3001, result);
         }
@@ -74,23 +74,24 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedIn2016()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(s => s.Date.Year == 2016).Sum(s => s.Quantity);
 
             Assert.AreEqual(1160, result);
         }
-        
+
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedInThePast7Days()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(s => (DateTime.Now - s.Date).TotalDays <= 7).Sum(s => s.Quantity);
 
-            Assert.AreEqual(32, result);
+            Assert.AreEqual(0, result);
         }
 
         [Test]
         public void Test_HowManyTransactionsBoughtMoreThan1Quantity()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(s => s.Quantity > 1).Count();
+
 
             Assert.AreEqual(1001, result);
         }
@@ -98,7 +99,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyTransactionsOccuredOnSundays()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(s => s.Date.DayOfWeek == DayOfWeek.Sunday).Count();
 
             Assert.AreEqual(267, result);
         }
@@ -106,7 +107,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheAverageQuantityPurchased()
         {
-            var result = 0; // TODO
+            var result = transactions.Average(s => s.Quantity);
 
             Assert.AreEqual(1.5005, result, 0.0001);
         }
@@ -114,7 +115,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsHaveBeenBought()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(s => s.ProductName == "Chips").Sum(s => s.Quantity);
 
             Assert.AreEqual(390, result);
         }
@@ -122,7 +123,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsHasJasonBought()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(s => s.ProductName == "Chips" && s.UserName == "Jason").Sum(s => s.Quantity);
 
             Assert.AreEqual(44, result);
         }
@@ -130,7 +131,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsDidJasonBuyIn2015()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(s => s.ProductName == "Chips" && s.UserName == "Jason" && s.Date.Year == 2015).Sum(s => s.Quantity);
 
             Assert.AreEqual(33, result);
         }
@@ -138,7 +139,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsDidJasonBuyInMay2016()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(s => s.ProductName == "Chips" && s.UserName == "Jason" && s.Date.Year == 2016 && s.Date.Month == 5).Sum(s => s.Quantity);
 
             Assert.AreEqual(2, result);
         }
@@ -146,7 +147,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatProductSellsTheMostBetween12And1PM()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(s => s.Date.Hour >= 12 && s.Date.Hour <= 13).OrderByDescending(s => s.Quantity).First().ProductName;
 
             Assert.AreEqual("Candy", result);
         }
@@ -154,7 +155,12 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatProductSellsTheLeast()
         {
-            var result = ""; // TODO
+            var result = transactions.GroupBy(s => s.ProductName)
+                .Select(t => new
+                {
+                    name = t.Key,
+                    count = t.Sum(s => s.Quantity)
+                }).OrderBy(s => s.count).First().name;
 
             Assert.AreEqual("Cookies", result);
         }
@@ -162,7 +168,12 @@ namespace UnitTestProject
         [Test]
         public void Test_WhoBoughtTheMostCandy()
         {
-            var result = ""; // TODO
+            var result = transactions.GroupBy(s => s.UserName)
+                    .Select(t => new
+                    {
+                        name = t.Key,
+                        count = t.Where(s => s.ProductName == "Candy").Sum(s => s.Quantity)
+                    }).OrderByDescending(s => s.count).First().name;
 
             Assert.AreEqual("David", result);
         }
@@ -170,7 +181,8 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalDollarValueOfAllTransactions()
         {
-            var result = 0; // TODO
+            var result = transactions.Join(products, t => t.ProductName, p => p.Name, (t, p) => new { dollar = p.Price, quantity = t.Quantity })
+                .Sum(s => s.dollar * s.quantity);
 
             Assert.AreEqual(3168.45, result, 0.001);
         }
@@ -178,16 +190,26 @@ namespace UnitTestProject
         [Test]
         public void Test_WhoSpentTheMostMoney()
         {
-            var result = ""; // TODO
-
+            var result = transactions.Join(products, t => t.ProductName, p => p.Name, (t, p) => new { product = p, transaction = t })
+                            .GroupBy(s => s.transaction.UserName)
+                            .Select(t => new
+                            {
+                                name = t.Key,
+                                count = t.Sum(s => s.transaction.Quantity * s.product.Price)
+                            }).OrderByDescending(s => s.count).First().name;
             Assert.AreEqual("Rod", result);
         }
 
         [Test]
         public void Test_WhatIsThePasswordOfThePersonWhoSpentTheMostMoney()
         {
-            var result = ""; // TODO
-
+            var result = transactions.Join(products, t => t.ProductName, p => p.Name, (t, p) => new { product = p, transaction = t })
+                            .GroupBy(s => s.transaction.UserName)
+                            .Select(t => new
+                            {
+                                name = t.Key,
+                                count = t.Sum(s => s.transaction.Quantity * s.product.Price)
+                            }).OrderByDescending(s => s.count).Join(users, t => t.name, u => u.Name, (t, u) => new { rest = t, userStuff = u }).First().userStuff.Password;
             Assert.AreEqual("optx", result);
         }
 
