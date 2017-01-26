@@ -66,7 +66,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchased()
         {
-            var result = ""; // TODO
+            var result = originalTransactions.Count(); // TODO
 
             Assert.AreEqual(3001, result);
         }
@@ -74,7 +74,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedIn2016()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(p=>p.Date.Year.Equals(2016)).Sum(p=>p.Quantity); //transactions.Where(puchases >= purchases.Date.Year.Equals(2016)).Sum(purchases => purchases.Quantity); // TODO
 
             Assert.AreEqual(1160, result);
         }
@@ -82,7 +82,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheTotalQuantityPurchasedInThePast7Days()
         {
-            var result = ""; // TODO
+            var result = "" ;//transactions.Where(p=> p.Date.).Sum(p=>p.Quantity); // TODO
 
             Assert.AreEqual(32, result);
         }
@@ -90,7 +90,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyTransactionsBoughtMoreThan1Quantity()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(p=>p.Quantity>1).Count(); // TODO
 
             Assert.AreEqual(1001, result);
         }
@@ -98,7 +98,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyTransactionsOccuredOnSundays()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(p=>p.Date.DayOfWeek.Equals(DayOfWeek.Sunday)).Count(); // TODO
 
             Assert.AreEqual(267, result);
         }
@@ -106,7 +106,7 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatIsTheAverageQuantityPurchased()
         {
-            var result = 0; // TODO
+            var result = transactions.Average(p=>p.Quantity); // TODO
 
             Assert.AreEqual(1.5005, result, 0.0001);
         }
@@ -114,7 +114,7 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsHaveBeenBought()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(p=>p.ProductName.Equals("Chips")).Sum(p=>p.Quantity); // TODO
 
             Assert.AreEqual(390, result);
         }
@@ -122,7 +122,8 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsHasJasonBought()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(p => p.UserName.Equals("Jason")).Where(p => p.ProductName.Equals("Chips")).Sum(p => p.Quantity); ; // TODO
+
 
             Assert.AreEqual(44, result);
         }
@@ -130,15 +131,15 @@ namespace UnitTestProject
         [Test]
         public void Test_HowManyBagsOfChipsDidJasonBuyIn2015()
         {
-            var result = ""; // TODO
-
+            var result = transactions.Where(p => p.UserName.Equals("Jason")).Where(p => p.ProductName.Equals("Chips")).Where(p => p.Date.Year.Equals(2015)).Sum(p => p.Quantity); // TODO
+            
             Assert.AreEqual(33, result);
         }
 
         [Test]
         public void Test_HowManyBagsOfChipsDidJasonBuyInMay2016()
         {
-            var result = ""; // TODO
+            var result = transactions.Where(p => p.UserName.Equals("Jason")).Where(p => p.ProductName.Equals("Chips")).Where(p => p.Date.Year.Equals(2016)).Where(p => p.Date.Month.Equals(5)).Sum(p => p.Quantity); // TODO
 
             Assert.AreEqual(2, result);
         }
