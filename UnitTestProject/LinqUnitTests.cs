@@ -146,7 +146,16 @@ namespace UnitTestProject
         [Test]
         public void Test_WhatProductSellsTheMostBetween12And1PM()
         {
-            var result = ""; // TODO
+            var result = transactions
+                .Where(t => t.Date.Hour == 12)
+                .GroupBy(t => t.ProductName)
+                .Select(g => new
+                {
+                    Product = g.Key,
+                    TotalSold = g.Sum(t => t.Quantity)
+                })
+                .OrderByDescending(t => t.TotalSold)
+                .Last().Product;
 
             Assert.AreEqual("Candy", result);
         }
